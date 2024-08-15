@@ -1,0 +1,22 @@
+from bs4 import BeautifulSoup
+import requests
+import csv
+url = "https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DA0321EN-SkillsNetwork/labs/datasets/Programming_Languages.html"
+
+
+data = requests.get(url).text
+
+
+soup = BeautifulSoup(data, "html.parser")
+
+
+language_names = [item.text for item in soup.find_all('td')[::2]]
+annual_average_salaries = [item.text for item in soup.find_all('td')[1::2]]
+
+
+with open('popular-languages.csv', 'w', newline='', encoding='utf-8') as csvfile:
+    writer = csv.writer(csvfile)
+    writer.writerow(['Language Name', 'Annual Average Salary'])
+    writer.writerows(zip(language_names, annual_average_salaries))
+
+print("Data saved to popular-languages.csv")
